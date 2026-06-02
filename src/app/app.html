@@ -1,0 +1,74 @@
+<div class="canvas">
+    <!-- SVG render target -->
+    <div id="graphDiv"></div>
+
+    <!-- Error toast -->
+    @if (errorMessage()) {
+    <div class="error-toast">⚠️ {{ errorMessage() }}</div>
+    }
+
+    <!-- FAB top-right — visible after first render -->
+    @if (hasRendered() && !isDialogOpen()) {
+    <button class="fab-edit" (click)="openEditor()" title="Edit or load a new diagram">
+        🛠️ Edit Diagram
+    </button>
+    }
+
+    <!-- Floating bottom control bar -->
+    @if (!isDialogOpen()) {
+    <div class="control-bar">
+        @if (isSequenceDiagram()) {
+        <button class="nav-btn" (click)="movePrev()">◀ Prev</button>
+
+        <div class="seq-box">
+            <span class="seq-label">{{ currentStep() }}</span>
+            <input class="seq-slider" type="range" [min]="0" [max]="totalSteps()" [value]="currentStep()"
+                (input)="onSliderChange($event)" />
+        </div>
+
+        <button class="nav-btn" (click)="moveNext()">Next ▶</button>
+        }
+
+        <button class="edit-btn" (click)="openEditor()" title="Edit Diagram">🛠️</button>
+    </div>
+    }
+
+    <!-- Floating bottom-left info -->
+    <footer class="app-footer">
+        <div>Source Code on <a href="https://github.com/programmer-lopez/Mermaid-Diagram" target="_blank">GitHub</a>
+        </div>
+        <div>Modified by <a href="https://github.com/programmer-lopez" target="_blank">programmer-lopez</a> · Angular
+        </div>
+    </footer>
+</div>
+
+<!-- ─── Editor Dialog ────────────────────────────────────────────────────── -->
+<!--
+    (click) on <dialog> captures backdrop clicks.
+    The inner .dialog-inner stops propagation so clicking inside doesn't close.
+-->
+<dialog #inputDialog (click)="onDialogBackdropClick($event)">
+    <div class="dialog-inner" (click)="$event.stopPropagation()">
+
+        <!-- Header row: title + close button -->
+        <div class="dialog-header">
+            <h2 class="dialog-title">Mermaid Diagram Editor</h2>
+            <button class="close-btn" (click)="closeEditor()" title="Close without rendering">✕</button>
+        </div>
+
+        <label for="diagramInput" class="textarea-label">Mermaid Code</label>
+        <textarea id="diagramInput" class="diagram-textarea" [(ngModel)]="mermaidCode" spellcheck="false"
+            autocomplete="off"></textarea>
+
+        <button class="render-btn" (click)="renderAndClose()">Render</button>
+
+        <h3 class="usage-title">How to use</h3>
+        <ol class="usage-list">
+            <li>📝 Escribe tu código de diagrama Mermaid arriba</li>
+            <li>🚀 Click <strong>Render</strong> para visualizarlo</li>
+            <li>🔍 Use <strong>Next / Prev</strong> para avanzar a través de secuencias</li>
+            <li>🔗 Copia la URL y compártela — todo está en el hash!</li>
+            <li>✕ Haz clic fuera de este diálogo o en el botón <strong>✕</strong> para cerrar sin renderizar</li>
+        </ol>
+    </div>
+</dialog>
