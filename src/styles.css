@@ -1,0 +1,24 @@
+/* Global reset — Angular handles everything inside app-root */
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    background: #ffffff;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 16px;
+}
+
+app-root {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+/* dialog::backdrop must be global — Angular's view encapsulation cannot scope it */
+dialog::backdrop {
+    background: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+}
